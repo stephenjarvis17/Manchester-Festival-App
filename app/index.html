@@ -93,6 +93,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <iron-icon icon="info"></iron-icon>
             <span>Location</span>
           </a>
+           <a data-route="adlist" href="{{baseUrl}}adlist">
+            <iron-icon icon="info"></iron-icon>
+            <span>Ad List</span>
+          </a>
+          
 
         </paper-menu>
       </paper-scroll-header-panel>
@@ -187,8 +192,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </paper-material>
             </section>
 
-            
-
+            <section data-route="adlist">
+              <paper-material elevation="1">
+                <h2 class="page-title">Ad List</h2>
+                <admin-ad-list></admin-ad-list>
+              </paper-material>
+            </section>
           </iron-pages>
         </div>
       </paper-scroll-header-panel>
