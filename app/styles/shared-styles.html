@@ -27,7 +27,7 @@
       /*toosoongame*/
       paper-header-panel {
           /*new float: left;*/
-          height: 550px;
+          height: 525px;
           width: 400px;
           /*new above*/
           min-width: 300px;
@@ -38,14 +38,38 @@
       }
 
       .paper-header {
-          height: 60px;
-          font-size: 16px;
-          line-height: 60px;
-          padding: 0 10px;
-          margin: 0px;
+          font-size: 14px;
+          padding: 20px 10px;
+          margin: 2px;
           color: var(--text-primary-color);
           background: var(--default-primary-color);
           transition: height 0.2s;
+      }
+
+      .login-dialog{
+        height: 380px;
+        /*200px;*/
+        width: 340px;
+      }
+
+      .buttonGroup{
+        margin: 20px;
+      }
+
+      .legend-dialog{
+        margin: 0px;
+        padding: 0px;
+        /*height: 550px;
+        width: 350px;*/
+        height: 685px;
+        width: 580px
+      }
+
+      .location-create-dlg{
+        margin: 0px;
+        padding: 0px;
+        height: 635px;
+        width: 940px;
       }
 
       :root {
@@ -56,8 +80,8 @@
       }
 
       paper-input {
-        margin-left: 10px;
-        margin-right: 10px;
+        font-size: 12px;
+        padding: 10px 10px;
       }
 
       paper-menu a {
@@ -75,11 +99,11 @@
         font-family: 'Noto', sans-serif;
         -webkit-font-smoothing: antialiased;
         text-rendering: optimizeLegibility;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 24px;
-        min-height: 48px;
-        padding: 0 16px;
+        font-size: 12px;
+        /*font-weight: 400;*/
+        /*line-height: 24px;*/
+        /*min-height: 48px;*/
+        /*padding: 5px;*/
       }
 
 
@@ -106,7 +130,7 @@
         margin-bottom: 5px;
       }
      
-     paper-button {
+      paper-button {
           color: var(--text-primary-color);
            margin: 5px;
            padding: 10px;
@@ -128,7 +152,15 @@
           padding: 10px;
           border-radius: 4px;
       }
-
+      .fab-add{
+        float: right;
+        margin: 20px;
+      }
+      .fab-close-dlg{
+        float: right;
+        vertical-align: baseline;
+      }
+      
       :host {
            display: block;
        }
@@ -161,15 +193,32 @@
         width: 94%;
        }
 
-       .googlemap{
-        padding: 20px;
+       .google-map-create{
+        margin-left: 10px;
+        margin-right: 10px;
+        float: left;
+        height: 522px;
+        width: 500px;
+        display: block;
        }
 
-       google-map {
+      /* google-map {
         height: 500px;
         width: 500px;
         display: block;
+      }*/
+
+      .firebase-scroll-table {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        min-height: 775px;
+        background-color: var(--paper-grey-200, #eee);
       }
+      
+      .firebase-table-content { padding: 8px; }
 
 
     </style>

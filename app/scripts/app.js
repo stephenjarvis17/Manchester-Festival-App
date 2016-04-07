@@ -39,7 +39,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   // See https://github.com/Polymer/polymer/issues/1381
   window.addEventListener('WebComponentsReady', function() {
     // imports are loaded and elements have been registered
+    document.querySelector('#signOut').addEventListener('click', function() {
+      console.log('Our app is signing out!');
+      app.logout();
+      app.login();
+    });
+    
+    app.login();
   });
+
+  app.login = function() {
+    var loginScreen = document.getElementById('loginscreenId');
+    if (loginScreen) {
+      loginScreen._showLogin();
+    }
+  };
+
+  app.logout = function() {
+    var loginScreen = document.getElementById('loginscreenId');
+    if (loginScreen) {
+      loginScreen._logout();
+    }
+  };
 
   // Main area's paper-scroll-header-panel custom condensing transformation of
   // the appName in the middle-container and the bottom title in the bottom-container.

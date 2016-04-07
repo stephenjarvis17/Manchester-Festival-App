@@ -1,0 +1,204 @@
+<!-- event-list-->
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-icons/notification-icons.html">
+<link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/scale-down-animation.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animations.html">
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/notification-icons.html">
+<link rel="import" href="event-create.html">
+<!-- third party -->
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../bounce-in-animation/bounce-in-animation.html">
+
+<dom-module id="event-list">
+    <template>
+        <style include="shared-styles"></style>
+        <style>
+        :host {
+            display: block;
+        }
+        </style>
+
+        <firebase-collection location="https://legendmanchesterma.firebaseIO.com/event" order-by-child="name" data="{{collection}}"></firebase-collection>
+
+        <paper-dialog class="legend-dialog" id="dlgEventCreate" modal entry-animation="bounce-in-animation" exit-animation="scale-down-animation" with-backdrop>
+            <event-create></event-create>
+        </paper-dialog>
+
+        <paper-scroll-header-panel keep-condensed-header class="firebase-scroll-table">
+            <div class="paper-header">Events</div>
+
+            <div class="firebase-table-content">
+                <paper-input on-input="_filterChanged" id="filter" type="search" placeholder="Filter by Name..."></paper-input>
+               
+                <vaadin-grid id='gridEvents' on-selected-items-changed="gridItemSelected">
+                    <table>
+                        <colgroup id='gridcolgroup'>
+                            <col id='name' sortable="">
+                            <col id='description' sortable="">
+                            <col id='startDate' sortable="">
+                            <col id='startTime' sortable="">
+                            <col id='endData' sortable="">
+                            <col id='endTime' sortable="">
+                            <col id='location'>
+                            <col id='latitude'>
+                            <col id='longitude'>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Start Date</th>
+                                <th>Start Time</th>
+                                <th>End Date</th>
+                                <th>End Time</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template is="dom-repeat" items="[[collection]]" as="item">
+                                <tr>
+                                    <td>[[item.name]]</td>
+                                    <td>[[item.description]]</td>
+                                    <td>[[item.startDate]]</td>
+                                    <td>[[item.startTime]]</td>
+                                    <td>[[item.endDate]]</td>
+                                    <td>[[item.endTime]]</td>
+                                    <!-- <td><span>[[item.location.latitude]]</span> <span>[[item.location.longitude]]</span></td> -->
+                                    <!--  need to scale down the map or pop out or expand
+                     <td>
+                        <google-map latitude="37.77493" longitude="-122.41942" zoom="20" fit-to-markers mouseEvents="true" >
+                          <google-map-marker latitude="[[item.location.latitude]]" longitude="[[item.location.longitude]]"  on-google-map-marker-mouseup="markerMoved" animation="DROP" mouse-events="true" title="The Event Location" latitude="[[item.location.latitude]]" longitude="[[item.location.longitude]]" ></google-map-marker>
+                        </google-map> 
+                      </td>-->
+                                    <td>[[item.location.latitude]]</td>
+                                    <td>[[item.location.longitude]]</td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </vaadin-grid>
+
+                <paper-fab class="fab-add" mini on-tap='_openEventCreateDlg' icon="add" title="New Event?"></paper-fab>
+            </div>
+        </paper-scroll-header-panel>
+
+        <paper-toast id="toast" duration="6000"></paper-toast>
+    </template>
+    <script>
+    Polymer({
+        is: 'event-list',
+        properties: {
+            collection: {
+                type: Object
+            },
+            origCollection: { // copy of orig, used with filtering/restore
+                type: Object
+            },
+            selectedItem: {
+                type: Object
+            }
+        },
+        listeners: {
+            'gridEvents.sort-order-changed': '_sortOrderChanged',
+            'closeEventCreateDlg': '_closeEventCreateDlg'
+        },
+        _openEventCreateDlg: function() {
+            this.$.dlgEventCreate.open();
+        },
+        _closeEventCreateDlg: function(e) {
+            var msg = e.detail.toastThis;
+            if (msg && (typeof msg === 'string')) {
+                this._popToast(msg);
+            }
+            this.$.dlgEventCreate.close();
+        },
+        _filterChanged: function() {
+            // save the collection once
+            if (!this.origCollection) {
+                this.origCollection = this.collection;
+            }
+            var that = this;
+            var tempArray = Array.prototype.slice.call(this.origCollection);
+
+            this.collection = tempArray.filter(function(item) {
+                return item.name.toLowerCase().startsWith(that.$.filter.value.toLowerCase());
+            });
+        },
+        gridItemSelected: function() {
+            this.$.gridEvents.getItem([this.$.gridEvents.selection.selected()], function(err, item) {
+                this.selectedItem = item;
+                if (this.selectedItem) {
+                    console.log('Selected Grid Item: ' + this.selectedItem);
+                    //todo? pop card with map?
+                }
+            });
+        },
+        _sortOrderChanged(val, ord) {
+            if (!this.collection || this.collection.length === 0) {
+                return;
+            }
+
+            if (ord.value && ord.value.length > 0) {
+                var columnIndexToSort = ord.value[0].column;
+                var children = this.$.gridcolgroup.children.length;
+
+                if (columnIndexToSort < children) {
+                    var columnIdObjName = this.$.gridcolgroup.getElementsByTagName('col')[columnIndexToSort].id;
+                    var direction = ord.value[0].direction;
+                    var lesser = direction === 'asc' ? -1 : 1;
+                    var tempArray = Array.prototype.slice.call(this.collection);
+
+                    console.log(direction);
+                    tempArray.sort(function(a, b) {
+                        // todo this._computeSort(columnIdObjName, lesser));
+                        // todo: spin off of types
+                        if (a[columnIdObjName] === b[columnIdObjName]) {
+                            console.log('the same value');
+                            return 0;
+                        }
+                        return (a[columnIdObjName] < b[columnIdObjName]) ? lesser : -lesser;
+                    });
+
+                    this.collection = tempArray;
+                }
+            }
+        },
+        _popToast: function(newValue) {
+                this.$.toast.text = newValue;
+                this.$.toast.show();
+            }
+            // // not working yet
+            // _computeSort: function(name, lesser) {
+            //   return function(a, b) {
+            //     // stings only
+            //     // todo: spin off of types
+            //     if (a[name] === b[name]) {
+            //       return 0;
+            //     }
+            //     return (a[name] < b[name]) ? lesser: -lesser;
+            //   };
+            // }
+
+    });
+    </script>
+</dom-module>

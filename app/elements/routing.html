@@ -54,18 +54,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       app.params = data.params;
     });
 
-    page('/contact', function() {
-      app.route = 'contact';
+    page('/advertisements', function() {
+      app.route = 'advertisements';
     });
 
-    page('/location', function() {
-      app.route = 'location';
+    page('/events', function() {
+      app.route = 'events';
     });
 
-    page('/adlist', function() {
-      app.route = 'adlist';
+    page('/locations', function() {
+      app.route = 'locations';
     });
-    
+
     // 404
     page('*', function() {
       app.$.toast.text = 'Can\'t find: ' + window.location.href  + '. Redirected you to Home Page';

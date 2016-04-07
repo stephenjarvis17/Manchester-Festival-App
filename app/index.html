@@ -63,6 +63,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <span id="browser-sync-binding"></span>
   <template is="dom-bind" id="app">
 
+  <div>
+      <login-firebase-email-pw id="loginscreenId" class="layout vertical center-center fit" width="wide" height="tall"></login-firebase-email-pw>
+    </div>
+
     <paper-drawer-panel id="paperDrawerPanel">
       <!-- Drawer Scroll Header Panel -->
       <paper-scroll-header-panel drawer fixed>
@@ -74,30 +78,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <!-- Drawer Content -->
         <paper-menu class="list" attr-for-selected="data-route" selected="[[route]]">
+          
           <a data-route="home" href="{{baseUrl}}">
             <iron-icon icon="home"></iron-icon>
             <span>Home</span>
           </a>
 
-          <a data-route="users" href="{{baseUrl}}users">
-            <iron-icon icon="info"></iron-icon>
-            <span>Ads</span>
+           <a data-route="advertisements" href="{{baseUrl}}advertisements">
+            <iron-icon icon="list"></iron-icon>
+            <span>Advertisements</span>
           </a>
 
-          <a data-route="contact" href="{{baseUrl}}contact">
-            <iron-icon icon="info"></iron-icon>
+          <a data-route="events" href="{{baseUrl}}events">
+            <iron-icon icon="event"></iron-icon>
             <span>Events</span>
           </a>
 
-           <a data-route="location" href="{{baseUrl}}location">
-            <iron-icon icon="info"></iron-icon>
-            <span>Location</span>
+          <a data-route="locations" href="{{baseUrl}}locations">
+            <iron-icon icon="maps:add-location"></iron-icon>
+            <span>Locations</span>
           </a>
-           <a data-route="adlist" href="{{baseUrl}}adlist">
-            <iron-icon icon="info"></iron-icon>
-            <span>Ad List</span>
-          </a>
-          
 
         </paper-menu>
       </paper-scroll-header-panel>
@@ -113,6 +113,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <!-- Toolbar icons -->
           <paper-icon-button icon="refresh"></paper-icon-button>
           <paper-icon-button icon="search"></paper-icon-button>
+          <paper-button id="signOut">Sign Out</paper-button>
 
           <!-- Application name -->
           <div class="middle middle-container center horizontal layout">
@@ -164,13 +165,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             </section>
 
-            <section data-route="users">
-              <paper-material class="admin-panel" elevation="1">
-              <h2 class="page-title">Ads</h2>
-              <admin-ads></admin-ads>
-              </paper-material>
-            </section>
-
             <section data-route="user-info">
               <paper-material elevation="1">
                 <h2 class="page-title">User: {{params.name}}</h2>
@@ -178,26 +172,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </paper-material>
             </section>
 
-            <section data-route="contact">
+             <section data-route="advertisements">
               <paper-material elevation="1">
-                <h2 class="page-title">Events</h2>
-                <admin-event></admin-event>
+                <!-- <h2 class="page-title">Advertisements</h2> -->
+                <advertisement-list></advertisement-list>
               </paper-material>
             </section>
 
-             <section data-route="location">
+             <section data-route="events">
               <paper-material elevation="1">
-                <h2 class="page-title">Locations</h2>
-                <admin-location></admin-location>
+                <!-- <h2 class="page-title">Events</h2> -->
+                <event-list></event-list>
               </paper-material>
             </section>
 
-            <section data-route="adlist">
+            <section data-route="locations">
               <paper-material elevation="1">
-                <h2 class="page-title">Ad List</h2>
-                <admin-ad-list></admin-ad-list>
+                <!-- <h2 class="page-title">Locations</h2> -->
+                <location-list></location-list>
               </paper-material>
             </section>
+
           </iron-pages>
         </div>
       </paper-scroll-header-panel>
@@ -228,6 +223,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <!-- build:js scripts/app.js -->
   <script src="scripts/app.js"></script>
+  
+</script>
   <!-- endbuild-->
 </body>
 
